@@ -9,7 +9,7 @@ class VehicleCharacteristic extends Model
 {
     use HasFactory;
 
-    //TODO create Many to Many relationship
+    //TODO it's possible to create a Many to Many relationship to improve the system
     const CHARACTERISTIC_NAMES = [
         'sport' => 'Esporte',
         'classic' => 'Clássico',

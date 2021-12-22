@@ -7,18 +7,19 @@
         <a class="btn btn-secondary mb-3" href="{{ url('/vehicles/create') }}" role="button" style="float: right;">Adicionar Veículo</a>
         
         <div class="input-group mb-3">
-            <input id="query_chassis_number" type="text" class="form-control" placeholder="Nº Chassi" aria-label="Nº Chassi" aria-describedby="button-addon2">
-            <input id="query_plate" type="text" class="form-control" placeholder="Placa" aria-label="Placa" aria-describedby="button-addon2">
+            <input id="query_chassis_number" value="{{$_GET['query_chassis_number']??''}}" type="text" class="form-control" placeholder="Nº Chassi" aria-label="Nº Chassi" aria-describedby="button-addon2">
+            <input id="query_plate" type="text" value="{{$_GET['query_plate']??''}}" class="form-control" placeholder="Placa" aria-label="Placa" aria-describedby="button-addon2">
             <select id="query_characteristics" class="form-select" aria-label="Default select example">
-                <option selected>Características</option>
-                <option value="sport">Esporte</option>
-                <option value="classic">Clássico</option>
-                <option value="turbo">Turbo</option>
-                <option value="economic">Econômico</option>
-                <option value="city">Para cidade</option>
-                <option value="distant_travels">Para longas viagens</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='null')?'selected':''}} value="null">Características</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='sport')?'selected':''}} value="sport">Esporte</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='classic')?'selected':''}} value="classic">Clássico</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='turbo')?'selected':''}} value="turbo">Turbo</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='economic')?'selected':''}} value="economic">Econômico</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='city')?'selected':''}} value="city">Para cidade</option>
+                <option {{(isset($_GET['query_characteristics']) && $_GET['query_characteristics']==='distant_travels')?'selected':''}} value="distant_travels">Para longas viagens</option>
             </select>
-            <button onclick="makeQuery()" class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+            <a class="btn btn-outline-secondary" href="{{ route('vehicles.index') }}" role="button">Limpar filtros</a>
+            <button onclick="makeQuery()" class="btn btn-outline-secondary" type="button" id="button-addon2">Filtrar</button>
         </div>
     </div>
 
@@ -38,7 +39,7 @@
             </thead>
             <tbody>
                 @foreach ($vehicles as $vehicle)
-                    <tr>
+                    <tr id="tr_{{$vehicle->id}}">
                         <th scope="row">{{ $vehicle->chassis_number }}</th>
                         <td>{{ $vehicle->brand }}</td>
                         <td>{{ $vehicle->model }}</td>
@@ -80,7 +81,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="delete_button" class="btn btn-danger" href="#" role="button">Deletar</a>
+                <button id="delete_button" value="" onclick="deleteVehicle(this.value)" type="button" class="btn btn-danger" data-bs-dismiss="modal">Deletar</button>
             </div>
         </div>
     </div>
@@ -89,15 +90,35 @@
 <script type="text/javascript">
 
 function deleteModal(vehicle) {
-    document.getElementById('delete_button').setAttribute('href', '/delete/'+vehicle.id);
+    document.getElementById('delete_button').setAttribute('value', vehicle.id);
     document.getElementById('deleteModalDescription').innerHTML = 'Tem certeza que quer deletar <b>'+vehicle.brand+' '+vehicle.model+'</b> de chassi número <b>'+vehicle.chassis_number+'</b>?';
 }
 
 function makeQuery() {
-    console.log(document.getElementById('query_chassis_number').value);
-    console.log(document.getElementById('query_plate').value);
-    console.log(document.getElementById('query_characteristics').value);
-    window.location.href='vehicles';
+    $query = [];    
+    $query.push('query_chassis_number='+document.getElementById('query_chassis_number').value);
+    $query.push('query_plate='+document.getElementById('query_plate').value);
+    $query.push('query_characteristics='+document.getElementById('query_characteristics').value);
+    window.location.href='vehicles?'+$query.join('&');
+}
+
+function deleteVehicle(id) {
+        
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", 'vehicles/delete/'+id);
+    xhr.setRequestHeader('X-CSRF-TOKEN', document.getElementsByName('csrf-token')[0].getAttribute('content'));
+    xhr.send();
+    xhr.onload = function() {
+        if (xhr.status != 200) {
+            console.log('ERROR');
+        } else {
+            console.log('DELETED!');
+            document.getElementById('tr_'+id).remove();
+        }
+    };
+    xhr.onerror = function() {
+        console.log('NO CONNECTION');
+    };
 }
 
 </script>

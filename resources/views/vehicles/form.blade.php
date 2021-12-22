@@ -84,39 +84,39 @@
         @enderror
 
         <div class="form-check mt-2">
-            <input class="form-check-input" type="radio" name="characteristicsModel" id="sport" value="sport" {{ ($vehicle->hasCharacteristic('sport')||old('characteristicsModel')==='sport')?'checked':'' }}>
+            <input class="form-check-input" type="radio" name="characteristicsModel" id="sport" value="sport" {{ ((isset($vehicle)&&$vehicle->hasCharacteristic('sport'))||old('characteristicsModel')==='sport')?'checked':'' }}>
             <label class="form-check-label" for="sport">
                 Esporte
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="characteristicsModel" id="classic" value="classic" {{ ($vehicle->hasCharacteristic('classic')||old('characteristicsModel')==='classic')?'checked':'' }}>
+            <input class="form-check-input" type="radio" name="characteristicsModel" id="classic" value="classic" {{ ((isset($vehicle)&&$vehicle->hasCharacteristic('classic'))||old('characteristicsModel')==='classic')?'checked':'' }}>
             <label class="form-check-label" for="classic">
                 Clássico
             </label>
         </div>
 
         <div class="form-check mt-2">
-            <input class="form-check-input" type="radio" name="characteristicsType" id="turbo" value="turbo" {{ ($vehicle->hasCharacteristic('turbo')||old('characteristicsType')==='turbo')?'checked':'' }}>
+            <input class="form-check-input" type="radio" name="characteristicsType" id="turbo" value="turbo" {{ ((isset($vehicle)&&$vehicle->hasCharacteristic('turbo'))||old('characteristicsType')==='turbo')?'checked':'' }}>
             <label class="form-check-label" for="turbo">
                 Turbo
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="characteristicsType" id="economic" value="economic" {{ ($vehicle->hasCharacteristic('economic')||old('characteristicsType')==='economic')?'checked':'' }}>
+            <input class="form-check-input" type="radio" name="characteristicsType" id="economic" value="economic" {{ ((isset($vehicle)&&$vehicle->hasCharacteristic('economic'))||old('characteristicsType')==='economic')?'checked':'' }}>
             <label class="form-check-label" for="economic">
                 Econômico
             </label>
         </div>
 
         <div class="form-check mt-2">
-            <input class="form-check-input" type="radio" name="characteristicsDistance" id="city" value="city" {{ ($vehicle->hasCharacteristic('city')||old('characteristicsDistance')==='city')?'checked':'' }}>
+            <input class="form-check-input" type="radio" name="characteristicsDistance" id="city" value="city" {{ ((isset($vehicle)&&$vehicle->hasCharacteristic('city'))||old('characteristicsDistance')==='city')?'checked':'' }}>
             <label class="form-check-label" for="city">
                 Para cidade
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="characteristicsDistance" id="distant_travels" value="distant_travels" {{ ($vehicle->hasCharacteristic('distant_travels')||old('characteristicsDistance')==='distant_travels')?'checked':'' }}>
+            <input class="form-check-input" type="radio" name="characteristicsDistance" id="distant_travels" value="distant_travels" {{ ((isset($vehicle)&&$vehicle->hasCharacteristic('distant_travels'))||old('characteristicsDistance')==='distant_travels')?'checked':'' }}>
             <label class="form-check-label" for="distant_travels">
                 Para longas viagens
             </label>
