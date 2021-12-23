@@ -1,6 +1,6 @@
 ## Sobre o Projeto
 
-Um simples CRUD de veículos criado com no padrão MVC com base no Framework Laravel, destinado a um teste de vaga de emprego para a empresa Cindapa. O sistema possui:
+Um simples CRUD de veículos criado no padrão MVC com base no Framework Laravel, destinado a um teste de vaga de emprego para a empresa Cindapa. O sistema possui:
 
 - Telas de Cadastrar, Alterar e Excluir;
 - Tela principal com a tabela;
