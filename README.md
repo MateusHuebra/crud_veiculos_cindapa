@@ -8,7 +8,7 @@ Um simples CRUD de veículos criado no padrão MVC com base no Framework Laravel
 
 ## Instalação
 
-É necessário instalar o [Laravel](https://laravel.com/docs) para a instalação e execução do projeto. Em seguide:
+É necessário instalar o [Laravel](https://laravel.com/docs) para a instalação e execução do projeto. Em seguida:
 - Rode o comando: composer install
 - Rode o comando: npm install && npm run dev
 - Crie a database e rode o database.sql presente na raiz
