@@ -5,21 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use App\Models\VehicleCharacteristic;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 
 class VehiclesController extends Controller
 {
     
     public function index(Request $request) {
-        $vehicles = Vehicle::get();
-        $vehicles = Vehicle::where('chassis_number', 'LIKE', '%'.$request->input('query_chassis_number').'%')
-            ->where('plate', 'LIKE', '%'.'%'.$request->input('query_plate').'%')
-            //->hasMany(VehicleCharacteristic::class)
-            //->where('characteristic', '=', $request->input('query_characteristics'))
-            ->get();
+        $queryBuilder = Vehicle::where('chassis_number', 'LIKE', '%'.$request->input('query_chassis_number').'%')
+            ->where('plate', 'LIKE', '%'.'%'.$request->input('query_plate').'%');
+        
+        if($request->input('query_characteristics') !== null) {
+            $queryBuilder->whereHas('characteristics', function($q) use($request) {
+                $q->where('characteristic', '=', $request->input('query_characteristics'));
+            });
+        }
+        
+        $vehicles = $queryBuilder->get();
         
         return view('vehicles.index', ['vehicles' => $vehicles]);
     }
@@ -41,8 +42,7 @@ class VehiclesController extends Controller
         if($request->input('characteristicsDistance') !== null) $number_of_characteristics++;
         $request->request->set('number_of_characteristics', $number_of_characteristics);
 
-        //TODO validate chassis_number mask
-        //TODO validate plate mask
+        //TODO validate chassis_number by regex
         Validator::make($request->all(), $this->getSaveValidationRules($request), $this->getSaveValidationMessages())->validate();
         #endregion
 
@@ -79,7 +79,7 @@ class VehiclesController extends Controller
         };
 
         //TODO feedback to user of successful save 
-        return redirect()->route('vehicles.index');
+        return redirect()->route('vehicles.index')->with('successful_save', 'tru');
     }
 
     public function delete($id) {
@@ -94,7 +94,7 @@ class VehiclesController extends Controller
             'brand' => 'required|min:3|max:32',
             'model' => 'required|min:1|max:32',
             'year' => 'required|integer|min:1769',
-            'plate' => 'required|size:7|unique:vehicles,plate,'.$request->input('id'),
+            'plate' => 'required|size:7|regex:/^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/|unique:vehicles,plate,'.$request->input('id'),
             'number_of_characteristics' => 'integer|min:2'
         ];
     }
@@ -116,6 +116,7 @@ class VehiclesController extends Controller
             'plate.required' => 'Campo obrigatório',
             'plate.size' => 'A placa deve possuir 7 caracteres',
             'plate.unique' => 'A placa já está em uso por outro carro',
+            'plate.regex' => 'Formato de placa inválido nos padrões do Brasil',
             'number_of_characteristics.integer' => 'Algo deu errado',
             'number_of_characteristics.min' => 'Selecione pelo menos 2 características'
         ];
